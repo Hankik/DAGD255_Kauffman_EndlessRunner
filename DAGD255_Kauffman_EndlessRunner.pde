@@ -6,8 +6,14 @@ DAGD 255
 
 */
 
-// global fields
-Player player;
+// declare global fields
+final int LEVEL_AMOUNT = 1;
+Level[] levels = new Level[LEVEL_AMOUNT];
+int currentLevel = 0;
+
+float dt, prevTime = 0;
+boolean isPaused = false;
+
 
 // Color constants
 final color RED = #bf616a;
@@ -29,15 +35,21 @@ void setup(){
 
   fullScreen();
   
-  player = new Player(width*.5, height*.5, 30, 30);
+  for (int i = 0; i < LEVEL_AMOUNT; i++){
+    levels[i] = new Level(i);
+  }
+  
 }
 
 void draw(){
   background(BLACK);
+  calcDeltaTime();
   
-  player.update();
+  if (!isPaused){
+    levels[currentLevel].update();
+  }
   
-  player.draw();
+  levels[currentLevel].draw();
 
   
   Keyboard.update();
@@ -49,4 +61,12 @@ void keyPressed() {
 
 void keyReleased() {
   Keyboard.handleKeyUp(keyCode);
+}
+
+// A method to get delta time
+void calcDeltaTime() {
+
+  float currTime = millis();
+  dt = (currTime - prevTime) / 1000;
+  prevTime = currTime;
 }

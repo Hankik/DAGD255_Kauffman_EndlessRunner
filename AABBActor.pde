@@ -1,6 +1,4 @@
-class AABBActor {
-  
-  
+public class AABBActor {
 
   // AABB fields
   float x, y, w, h;
@@ -21,20 +19,20 @@ class AABBActor {
   }
 
   void draw() {
-    if (canSeeHitbox){
-    
+    if (canSeeHitbox) {
+
       fill(WHITE);
       stroke(RED);
       strokeWeight(2);
-      
+
       pushMatrix();
-      rect(x -w/2, y-h/2, w, h);
+      //rect(x - w/2, y - h/2, w, h);
       line(edgeL, edgeT, edgeR, edgeT);
-      line(edgeR, edgeT, edgeR,  edgeB);
+      line(edgeR, edgeT, edgeR, edgeB);
       line(edgeR, edgeB, edgeL, edgeB);
       line(edgeL, edgeB, edgeL, edgeT);
       popMatrix();
-      
+
       noStroke();
     }
   }
@@ -45,10 +43,10 @@ class AABBActor {
   }
 
   void calcAABB() {
-    edgeL = x;
-    edgeR = x + w;
-    edgeT = y;
-    edgeB = y + h;
+    edgeL = x - w/2;
+    edgeR = x + w/2;
+    edgeT = y - h/2;
+    edgeB = y + h/2;
   }
 
   boolean checkCollision(AABBActor other) {
@@ -57,5 +55,33 @@ class AABBActor {
     if (edgeB < other.edgeT) return false;
     if (edgeT > other.edgeB) return false;
     return true;
+  }
+}
+
+class ActorFactory {
+
+  // fields
+  ArrayList<AABBActor> actors = new ArrayList();
+  
+  void update(){
+  
+    for (AABBActor a : actors) a.update();
+  }
+  
+  void draw(){
+    for (AABBActor a : actors) a.draw();
+  }
+  
+  AABBActor createActor(String name, float x, float y, float w, float h){
+    
+    if (name == null) return null;
+    
+    if (name.equalsIgnoreCase("PLAYER")){
+      Player p = new Player(x, y, w, h);
+      actors.add(p);
+      return p;
+    }
+    
+    return null;
   }
 }
