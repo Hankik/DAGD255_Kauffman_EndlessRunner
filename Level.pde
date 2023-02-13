@@ -2,7 +2,7 @@ class Level {
 
   // fields
   int id;
-  ActorFactory factory = new ActorFactory();
+  ActorFactory actors = new ActorFactory();
   Player player;
 
   Level(int id) {
@@ -13,18 +13,18 @@ class Level {
 
     case 0:
       
-      player = (Player) factory.createActor("player", width*.5, height*.5, 40, 40);
+      player = (Player) actors.createActor("player", width*.5, height*.5, 40, 40);
       break;
     }
   }
   
   void update(){
     
-    factory.update();
+    actors.update();
   }
   
   void draw(){
   
-    factory.draw();
+    actors.draw();
   }
 }
