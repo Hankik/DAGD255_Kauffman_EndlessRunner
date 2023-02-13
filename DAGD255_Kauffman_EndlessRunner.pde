@@ -14,4 +14,13 @@ void setup(){
 void draw(){
 
   
+  Keyboard.update();
+}
+
+void keyPressed() {
+  Keyboard.handleKeyDown(keyCode);
+}
+
+void keyReleased() {
+  Keyboard.handleKeyUp(keyCode);
 }
