@@ -6,12 +6,38 @@ DAGD 255
 
 */
 
+// global fields
+Player player;
+
+// Color constants
+final color RED = #bf616a;
+final color ORANGE = #d08770;
+final color YELLOW = #ebcb8b;
+final color GREEN = #a3be8c;
+final color PURPLE = #b48ead;
+final color BLUE = #5e81ac;
+final color WHITE = #eceff4;
+final color BLACK = #3b4252;
+final color BROWN = #9e6257;
+final color LIGHTGREEN = #d9e68f;
+final color PINK = #db96ad;
+final color LIGHTBLUE = #92cade;
+final color LIGHTRED = #FF8C8C;
+final color TONGUE = #c0003f;
+
 void setup(){
 
   fullScreen();
+  
+  player = new Player(width*.5, height*.5, 30, 30);
 }
 
 void draw(){
+  background(BLACK);
+  
+  player.update();
+  
+  player.draw();
 
   
   Keyboard.update();
