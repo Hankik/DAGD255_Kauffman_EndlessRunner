@@ -27,4 +27,8 @@ class Level {
   
     actors.draw();
   }
+  
+  void mousePressed(){}
+  
+  void mouseReleased(){}
 }

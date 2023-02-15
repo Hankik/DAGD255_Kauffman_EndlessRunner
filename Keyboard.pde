@@ -2,8 +2,8 @@ static public class Keyboard {
 
   // We don't need a constructor in this class because we are NEVER going to instatiate this.
 
-  private static boolean[] keys = new boolean[128];
-  private static boolean[] pKeys = new boolean[128];
+  private static boolean[] keys = new boolean[256];
+  private static boolean[] pKeys = new boolean[256];
   public static final int LEFT = 65;
   public static final int RIGHT = 68;
   public static final int UP = 87;

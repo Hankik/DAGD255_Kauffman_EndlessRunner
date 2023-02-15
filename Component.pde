@@ -6,9 +6,6 @@ abstract class Component {
   float x, y;
   boolean isVisible = false;
   
-  Component(AABBActor parent){
-    this.parent = parent;
-  }
   
   abstract void update();
   

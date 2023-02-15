@@ -6,13 +6,24 @@ DAGD 255
 
 */
 
+//
 // declare global fields
-final int LEVEL_AMOUNT = 1;
-Level[] levels = new Level[LEVEL_AMOUNT];
-int currentLevel = 0;
+// 
 
-float dt, prevTime = 0;
+final int LEVEL_AMOUNT = 1;               // LEVELS
+int currentLevel = 0;
+Level[] levels = new Level[LEVEL_AMOUNT];
+
+float dt, prevTime = 0;                   // DELTA TIME
+
+float WORLD_GRAVITY_SCALE = 10;          // GRAVITY
+final float GRAVITY = 9.81;
+final float GROUND_Y = 500;
+
 boolean isPaused = false;
+
+boolean isLeftDown, wasPrevLeftDown = false;
+
 
 
 // Color constants
@@ -33,7 +44,8 @@ final color TONGUE = #c0003f;
 
 void setup(){
 
-  fullScreen();
+  size(1280, 720);
+  //fullScreen();
   
   for (int i = 0; i < LEVEL_AMOUNT; i++){
     levels[i] = new Level(i);
@@ -42,13 +54,14 @@ void setup(){
 }
 
 void draw(){
-  background(BLACK);
   calcDeltaTime();
+  background(BLACK);
   
   if (!isPaused){
     levels[currentLevel].update();
   }
   
+  drawGround();
   levels[currentLevel].draw();
 
   
@@ -61,6 +74,31 @@ void keyPressed() {
 
 void keyReleased() {
   Keyboard.handleKeyUp(keyCode);
+}
+
+void mousePressed() {
+  if (!isPaused) {
+    levels[currentLevel].mousePressed();
+    
+    
+  }
+  if (mouseButton == LEFT) isLeftDown = true;
+}
+
+void mouseReleased() {
+  if (!isPaused) {
+    levels[currentLevel].mouseReleased();
+    
+    
+  }
+  if (mouseButton == LEFT) isLeftDown = false;
+}
+
+void drawGround(){
+
+  fill(WHITE);
+  stroke(WHITE);
+  line(0, GROUND_Y, width, GROUND_Y);
 }
 
 // A method to get delta time

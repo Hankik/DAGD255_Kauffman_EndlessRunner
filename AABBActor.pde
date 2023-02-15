@@ -3,11 +3,27 @@ public class AABBActor {
   // AABB fields
   float x, y, w, h;
   float edgeL, edgeR, edgeT, edgeB;
+  float halfW, halfH;
 
   // Actor fields
   String name = "";
   boolean isDead = false;
   boolean canSeeHitbox = true;
+  
+  // Component fields
+  ArrayList<Component> components = new ArrayList();
+  
+  // Gravity fields
+  float gravityScale = 1;
+  boolean gravityEnabled = false;
+  boolean onGround = false;
+
+  // Movement fields
+  PVector velocity = new PVector();
+  float xMaxVelocity = 50;
+  //float friction = 1;
+  float speed = 300;
+  boolean xHitMaxSpeed = false;
 
 
   AABBActor() {
@@ -15,10 +31,18 @@ public class AABBActor {
   }
 
   void update() {
+    updateComponents();
+
+
+    calculateVelocity();
+    calculateGravity();
+    
     calcAABB();
   }
 
   void draw() {
+    drawComponents();
+    
     if (canSeeHitbox) {
 
       fill(WHITE);
@@ -40,13 +64,15 @@ public class AABBActor {
   void setSize(float w, float h) {
     this.w = w;
     this.h = h;
+    halfW = w/2;
+    halfH = h/2;
   }
 
   void calcAABB() {
-    edgeL = x - w/2;
-    edgeR = x + w/2;
-    edgeT = y - h/2;
-    edgeB = y + h/2;
+    edgeL = x - halfW;
+    edgeR = x + halfW;
+    edgeT = y - halfH;
+    edgeB = y + halfH;
   }
 
   boolean checkCollision(AABBActor other) {
@@ -56,32 +82,74 @@ public class AABBActor {
     if (edgeT > other.edgeB) return false;
     return true;
   }
+
+  void calculateGravity() {
+
+    if (gravityEnabled) {
+
+      velocity.y += GRAVITY * gravityScale * WORLD_GRAVITY_SCALE * dt;
+
+      if (y >= GROUND_Y - halfH) {
+        y = GROUND_Y - halfH;
+        onGround = true;
+      }
+    }
+  }
+  
+  void calculateVelocity(){
+    
+    if ( onGround && ( velocity.x > xMaxVelocity || velocity.x < -xMaxVelocity) ) xHitMaxSpeed = true;
+    else xHitMaxSpeed = false;
+  
+    x += velocity.x * dt;
+    y += velocity.y * dt;
+    
+  }
+  
+  //
+  // Component methods
+  //
+  void updateComponents(){
+    for (Component c : components) c.update();
+  }
+  
+  void drawComponents(){
+    for (Component c: components) c.update();
+  }
+  
+  // A method to add components to actor
+  AABBActor addComponent(Component c){
+    
+    components.add(c);
+    
+    return this; // Actor return type allows for chaining addComponent() calls
+  }
 }
 
 class ActorFactory {
 
   // fields
   ArrayList<AABBActor> actors = new ArrayList();
-  
-  void update(){
-  
+
+  void update() {
+
     for (AABBActor a : actors) a.update();
   }
-  
-  void draw(){
+
+  void draw() {
     for (AABBActor a : actors) a.draw();
   }
-  
-  AABBActor createActor(String name, float x, float y, float w, float h){
-    
+
+  AABBActor createActor(String name, float x, float y, float w, float h) {
+
     if (name == null) return null;
-    
-    if (name.equalsIgnoreCase("PLAYER")){
+
+    if (name.equalsIgnoreCase("PLAYER")) {
       Player p = new Player(x, y, w, h);
       actors.add(p);
       return p;
     }
-    
+
     return null;
   }
 }
