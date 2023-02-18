@@ -1,6 +1,7 @@
 class Movement extends Component {
 
   // variables
+  Timer stopDelay = new Timer(2);
   PVector direction = new PVector(0, 0);
   boolean moveLeft = false;
   boolean moveRight = false;
@@ -17,23 +18,40 @@ class Movement extends Component {
 
     boolean isMoving = moveLeft || moveRight || moveUp || moveDown;
 
-    // update direction
+    // Player xVel is slowed to zero linearly based off how close timer is to zero
+    if (!isMoving) {
+      stopDelay.update();
+      parent.velocity.x = lerp( parent.velocity.x, 0, 1 - stopDelay.timeLeft / stopDelay.duration );
+      return;
+    }
+    if (stopDelay.timeLeft != stopDelay.duration) stopDelay.reset(); // reset timer once
+
+    // determine direction
     if (moveLeft == true && moveRight == false) direction.x = -1.0;
     else if (moveLeft == false && moveRight == true) direction.x = 1.0;
-    else if (moveUp == true && moveDown == false) direction.y = -1.0;
+    if (moveUp == true && moveDown == false) direction.y = -1.0;
     else if (moveUp == false && moveDown == true) direction.y = 1.0;
 
-    // update location
-    direction.normalize();
-
-    if (isMoving) {
-      parent.velocity.x += direction.x * dt * parent.speed;
-      parent.velocity.y += direction.y * dt * parent.speed;  // no up down movement in this way
+    direction.normalize(); 
+    
+    if (parent.xHitMaxSpeed) {
+      parent.velocity.x = parent.velocity.x * .99; // constant velocity
     } else {
-      parent.velocity.x *= 0;
+      parent.velocity.x += direction.x * parent.speed; // accelerate
     }
+    
+    if (parent.yHitMaxSpeed) {
+      parent.velocity.y = parent.velocity.y * .99; // constant velocity
+    } else {
+      parent.velocity.y += direction.y * parent.speed; // accelerate
+    }
+    
     //println("moveLeft: " + moveLeft + "\nmoveRight: " + moveRight + "\nmoveUp: " + moveUp + "\nmoveDown: " + moveDown); // debug input
   }
+
+
+
+
 
   void update() {
   }

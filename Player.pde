@@ -1,10 +1,14 @@
-class Player extends AABBActor {
+class Player extends AABBActor implements Attacking {
 
   // fields
   Movement movement = new Movement(this);
+  Collision collision = new Collision(this);
   
   Player(float x, float y, float w, float h){
-    addComponent(movement);
+    
+    this
+      .addComponent(movement)
+      .addComponent(collision);
     
     this.x = x;
     this.y = y;
@@ -15,7 +19,7 @@ class Player extends AABBActor {
   void update(){
     
     if ( (Keyboard.isDown(Keyboard.SPACE) || Keyboard.isDown(Keyboard.UP) ) && onGround) jump();
-    movement.move(Keyboard.isDown(LEFT), Keyboard.isDown(RIGHT), Keyboard.isDown(UP), Keyboard.isDown(DOWN));
+    movement.move(Keyboard.isDown(LEFT), Keyboard.isDown(RIGHT), false, false);
   
     // at end, call super.update() for draw() to recieve changes
     super.update(); 
@@ -27,7 +31,10 @@ class Player extends AABBActor {
   
   void jump(){
   
-    velocity.y = -100;
+    velocity.y = -jumpHeight;
     onGround = false;
+  }
+  
+  void attack(float damage, float knockback){
   }
 }

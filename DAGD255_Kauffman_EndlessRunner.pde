@@ -16,7 +16,7 @@ Level[] levels = new Level[LEVEL_AMOUNT];
 
 float dt, prevTime = 0;                   // DELTA TIME
 
-float WORLD_GRAVITY_SCALE = 10;          // GRAVITY
+float WORLD_GRAVITY_SCALE = 40;          // GRAVITY
 final float GRAVITY = 9.81;
 final float GROUND_Y = 500;
 

@@ -9,10 +9,10 @@ public class AABBActor {
   String name = "";
   boolean isDead = false;
   boolean canSeeHitbox = true;
-  
+
   // Component fields
   ArrayList<Component> components = new ArrayList();
-  
+
   // Gravity fields
   float gravityScale = 1;
   boolean gravityEnabled = false;
@@ -20,10 +20,13 @@ public class AABBActor {
 
   // Movement fields
   PVector velocity = new PVector();
-  float xMaxVelocity = 50;
-  //float friction = 1;
-  float speed = 300;
+  float xMaxVelocity = 300;
+  float yMaxVelocity = 300;
+  float friction = 1;
+  float speed = 10;
+  float jumpHeight = 225;
   boolean xHitMaxSpeed = false;
+  boolean yHitMaxSpeed = false;
 
 
   AABBActor() {
@@ -31,18 +34,19 @@ public class AABBActor {
   }
 
   void update() {
-    updateComponents();
 
 
     calculateVelocity();
     calculateGravity();
-    
+
+    updateComponents();
+
     calcAABB();
   }
 
   void draw() {
     drawComponents();
-    
+
     if (canSeeHitbox) {
 
       fill(WHITE);
@@ -95,33 +99,34 @@ public class AABBActor {
       }
     }
   }
-  
-  void calculateVelocity(){
-    
-    if ( onGround && ( velocity.x > xMaxVelocity || velocity.x < -xMaxVelocity) ) xHitMaxSpeed = true;
+
+  void calculateVelocity() {
+
+    if ( velocity.x > xMaxVelocity || velocity.x < -xMaxVelocity ) xHitMaxSpeed = true;
     else xHitMaxSpeed = false;
-  
+    if ( velocity.y > yMaxVelocity || velocity.y < -yMaxVelocity ) yHitMaxSpeed = true;
+    else yHitMaxSpeed = false;
+
     x += velocity.x * dt;
     y += velocity.y * dt;
-    
   }
-  
+
   //
   // Component methods
   //
-  void updateComponents(){
+  void updateComponents() {
     for (Component c : components) c.update();
   }
-  
-  void drawComponents(){
-    for (Component c: components) c.update();
+
+  void drawComponents() {
+    for (Component c : components) c.update();
   }
-  
+
   // A method to add components to actor
-  AABBActor addComponent(Component c){
-    
+  AABBActor addComponent(Component c) {
+
     components.add(c);
-    
+
     return this; // Actor return type allows for chaining addComponent() calls
   }
 }
@@ -148,6 +153,11 @@ class ActorFactory {
       Player p = new Player(x, y, w, h);
       actors.add(p);
       return p;
+    }
+    if (name.equalsIgnoreCase("TEST")){
+      Test t = new Test(x, y, w, h, actors.get(0));
+      actors.add(t);
+      return t;
     }
 
     return null;
