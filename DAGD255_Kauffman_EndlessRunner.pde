@@ -61,8 +61,9 @@ void draw(){
     levels[currentLevel].update();
   }
   
-  drawGround();
   levels[currentLevel].draw();
+  
+  drawGround();
 
   
   Keyboard.update();

@@ -11,4 +11,9 @@ abstract class Component {
   abstract void update();
 
   abstract void draw();
+  
+  void setVisibility(boolean visibility){
+    isVisible = visibility;
+  }
+  
 }

@@ -10,7 +10,6 @@ class Test extends AABBActor {
     this
       .addComponent(movement)
       .addComponent(collision);
-  
     
     this.x = x;
     this.y = y;
