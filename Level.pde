@@ -20,6 +20,7 @@ class Level {
     case 0:
 
       player = (Player) actors.createActor("player", width*.5, height*.5, 40, 80);
+      platform = (Platform) actors.createActor("platform", width*.7, height *.6, 80, 30);
       camera = new Camera(player);
 
       break;
@@ -85,7 +86,6 @@ class Level {
     for (float i = 0; i <= 10; i++){
     
       float x = (i/10)*rightBound;
-      println(x);
       line(x, -height, x, height);
     }
   }

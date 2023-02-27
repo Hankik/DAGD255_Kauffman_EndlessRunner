@@ -8,6 +8,7 @@ class Camera extends AABBActor {
   float yOffset = -200;
   float xOffset = 400;
   boolean isStopped;
+  float speedControlXBound;
 
   Camera(Player p) {
     target = p;
@@ -15,29 +16,47 @@ class Camera extends AABBActor {
     ty = target.y - height/2;
     x = tx;
     y = ty;
-    
+
     setSize(100, 100);
+
+    speedControlXBound = x + 400;
   }
 
   void update() {
-    
+
+    speedControlXBound = x + 400;
+    stroke(BLUE);
+    line(speedControlXBound, -height, speedControlXBound, height*2);
+    println(x);
+
     if (isStopped) return;
-    tx = target.x + xOffset - (width/2) / currentZoom;
-    ty = target.y + yOffset - (height/2) / currentZoom;
+
+    tx = target.x - (width/2) / currentZoom;
+    ty = target.y - (height/2) / currentZoom;
 
 
-    // For Camera Easing Effect
-    float dx = tx - x;
-    float dy = ty - y;
+    float dx = tx + xOffset - x; // For Camera Easing Effect
+    float dy = ty + yOffset - y;
     x += dx;// * 0.2;
     y += dy;// * 0.2;
+
+    if (target.x > speedControlXBound) {
+
+      //float dx = tx + xOffset - x; // For Camera Easing Effect
+      //float dy = ty + yOffset - y;
+      //x += dx;// * 0.2;
+      //y += dy;// * 0.2;
+    }
+    if (target.x < x) {
+    }
+    //if (target.x <= speedControlXBound && target.x ){}
   }
-  
-  void stop(){
+
+  void stop() {
     isStopped = true;
   }
-  
-  void resume(){
+
+  void resume() {
     isStopped = false;
   }
 
