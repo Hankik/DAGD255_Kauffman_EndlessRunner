@@ -1,7 +1,7 @@
 class Movement extends Component {
 
   // variables
-  Timer stopDelay = new Timer(32);
+  Timer stopDelay = new Timer(16);
   PVector direction = new PVector(0, 0);
 
   Movement(AABBActor parent) {
@@ -17,9 +17,10 @@ class Movement extends Component {
     // Player xVel is slowed to zero linearly based off how close timer is to zero
     if (!isMoving) {
       stopDelay.update();
-      parent.velocity.x = lerp( parent.velocity.x, 0, .05 /* 1 - stopDelay.timeLeft / stopDelay.duration */ );
+      parent.velocity.x = lerp( parent.velocity.x, 0,  1 - stopDelay.timeLeft / stopDelay.duration );
       return;
     }
+    
     if (stopDelay.timeLeft != stopDelay.duration) stopDelay.reset(); // reset timer once
 
     // determine direction
@@ -54,7 +55,7 @@ class Movement extends Component {
       pushMatrix();
       translate(parent.x, parent.y);
       textAlign(CENTER);
-      text("velocity: " + parent.velocity, 0, parent.h);
+      text("xVel: " + (int)parent.velocity.x + " | yVel: " + (int)parent.velocity.y , 0, parent.h);
       popMatrix();
     }
   }

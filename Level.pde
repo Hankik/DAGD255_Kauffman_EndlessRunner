@@ -5,8 +5,11 @@ class Level {
   ActorFactory actors = new ActorFactory();
   Player player;
   Platform platform;
-  Test test, test2, test3, test4, test5, test6, test7;
-  TileBG bg = new TileBG("bg1.png", -2, -300), bg2 = new TileBG("bg2.png", -4, -100), bg3 = new TileBG("bg3.png", -1, -100);
+  Camera camera;
+  
+  // Bounds fields
+  float rightBound = 4000;
+  float leftBound = 0;
 
   Level(int id) {
 
@@ -17,14 +20,7 @@ class Level {
     case 0:
 
       player = (Player) actors.createActor("player", width*.5, height*.5, 40, 80);
-      platform = (Platform) actors.createActor("platform", width*.75, height*.65, 70, 20);
-      test = (Test) actors.createActor("test", random(width), random(height), random(100), random(100));
-      test2 = (Test) actors.createActor("test", random(width), random(height), random(100), random(100));
-      test3 = (Test) actors.createActor("test", random(width), random(height), random(100), random(100));
-      test4 = (Test) actors.createActor("test", random(width), random(height), random(100), random(100));
-      test5 = (Test) actors.createActor("test", random(width), random(height), random(100), random(100));
-      test6 = (Test) actors.createActor("test", random(width), random(height), random(100), random(100));
-      test7 = (Test) actors.createActor("test", random(width), random(height), random(100), random(100));
+      camera = new Camera(player);
 
       break;
     }
@@ -32,10 +28,19 @@ class Level {
 
   void update() {
 
-    bg3.update();
-    bg.update();
-    bg2.update();
+    pushMatrix();
+    translate(-camera.x, -camera.y);
+
+    camera.update();
+
     actors.update();
+    if (player.x - player.w*.5 > rightBound) {
+      player.x = leftBound + player.w;
+      
+    }
+    if (player.x + player.w*.5 < leftBound) {
+      player.x = rightBound - player.w;
+    }
 
     for (AABBActor a : actors.list) {
       if (!a.name.equals("platform")) continue; // only collide with platforms
@@ -44,13 +49,16 @@ class Level {
         player.fixOverlap(a);
       }
     }
+
+    draw(); // levels handle their own drawing
+
+    drawGround();
+
+    popMatrix();
   }
 
   void draw() {
 
-    bg3.draw();
-    bg.draw();
-    bg2.draw();
     actors.draw();
   }
 
@@ -58,5 +66,27 @@ class Level {
   }
 
   void mouseReleased() {
+  }
+  
+  void handleCamera(){
+  
+    if (camera.x + width*.5 > rightBound) camera.stop();
+    else camera.resume();
+    
+  }
+
+
+
+  void drawGround() {
+
+    stroke(RED);
+    line(camera.x - width*.5 - player.w, GROUND_Y, camera.x + width + player.w, GROUND_Y);
+    
+    for (float i = 0; i <= 10; i++){
+    
+      float x = (i/10)*rightBound;
+      println(x);
+      line(x, -height, x, height);
+    }
   }
 }

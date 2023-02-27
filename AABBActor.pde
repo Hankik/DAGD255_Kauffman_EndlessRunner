@@ -22,6 +22,8 @@ public class AABBActor {
   PVector velocity = new PVector();
   float xMaxVelocity = 300;
   float yMaxVelocity = 300;
+  float xMinVelocity = -300;
+  float yMinVelocity = -300;
   float friction = 1;
   float speed = 10;
   float jumpHeight = 225;
@@ -59,6 +61,8 @@ public class AABBActor {
       line(edgeR, edgeT, edgeR, edgeB);
       line(edgeR, edgeB, edgeL, edgeB);
       line(edgeL, edgeB, edgeL, edgeT);
+      textAlign(CENTER);
+      text("xPos: " + (int)x + " | yPos: " + (int)y, x, y + h*.75);
       popMatrix();
 
       noStroke();
@@ -86,10 +90,10 @@ public class AABBActor {
     if (edgeT > other.edgeB) return false;
     return true;
   }
-  
-  // 
+
+  //
   // Collision resolution methods
-  // 
+  //
   public void fixOverlap(AABBActor other) {
     float pushUp = edgeB - other.edgeT;
     float pushLeft = edgeR - other.edgeL;
@@ -149,8 +153,8 @@ public class AABBActor {
 
     return result;
   }
-  
-  // 
+
+  //
   // Velocity methods
   //
 
@@ -173,6 +177,9 @@ public class AABBActor {
     else xHitMaxSpeed = false;
     if ( velocity.y > yMaxVelocity || velocity.y < -yMaxVelocity ) yHitMaxSpeed = true;
     else yHitMaxSpeed = false;
+    
+    velocity.x = max(xMinVelocity, velocity.x);
+    velocity.y = max(yMinVelocity, velocity.y);
 
     x += velocity.x * dt;
     y += velocity.y * dt;
@@ -196,15 +203,15 @@ public class AABBActor {
 
     return this; // Actor return type allows for chaining addComponent() calls
   }
-  
+
   // If using this method, always check for possibility of NULL
-  Component getComponent(String name){
-  
+  Component getComponent(String name) {
+
     for (Component c : components) {
-    
+
       if (c.name == name) return c;
     }
-    
+
     println(this.name + " could not find component '" + name + "'.");
     return null;
   }
@@ -233,13 +240,8 @@ class ActorFactory {
       list.add(p);
       return p;
     }
-    if (name.equalsIgnoreCase("TEST")){
-      Test t = new Test(x, y, w, h, list.get(list.size() - 1));
-      list.add(t);
-      return t;
-    }
-    if (name.equalsIgnoreCase("PLATFORM")){
-    
+    if (name.equalsIgnoreCase("PLATFORM")) {
+
       Platform p = new Platform(x, y, w, h);
       list.add(p);
       return p;

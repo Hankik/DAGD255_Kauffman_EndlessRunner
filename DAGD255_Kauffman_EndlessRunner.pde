@@ -1,14 +1,14 @@
 /*
 
-Hank Kauffman
-2/13/23
-DAGD 255
-
-*/
+ Hank Kauffman
+ 2/13/23
+ DAGD 255
+ 
+ */
 
 //
 // declare global fields
-// 
+//
 
 final int LEVEL_AMOUNT = 1;               // LEVELS
 int currentLevel = 0;
@@ -42,30 +42,27 @@ final color LIGHTBLUE = #92cade;
 final color LIGHTRED = #FF8C8C;
 final color TONGUE = #c0003f;
 
-void setup(){
+void setup() {
 
   size(1280, 720);
   //fullScreen();
-  
-  for (int i = 0; i < LEVEL_AMOUNT; i++){
+
+  frameRate(120);
+
+  for (int i = 0; i < LEVEL_AMOUNT; i++) {
     levels[i] = new Level(i);
   }
-  
 }
 
-void draw(){
+void draw() {
   calcDeltaTime();
   background(BLACK);
-  
-  if (!isPaused){
+
+ 
+  if (!isPaused) {
     levels[currentLevel].update();
   }
-  
-  levels[currentLevel].draw();
-  
-  drawGround();
 
-  
   Keyboard.update();
 }
 
@@ -80,8 +77,6 @@ void keyReleased() {
 void mousePressed() {
   if (!isPaused) {
     levels[currentLevel].mousePressed();
-    
-    
   }
   if (mouseButton == LEFT) isLeftDown = true;
 }
@@ -89,17 +84,8 @@ void mousePressed() {
 void mouseReleased() {
   if (!isPaused) {
     levels[currentLevel].mouseReleased();
-    
-    
   }
   if (mouseButton == LEFT) isLeftDown = false;
-}
-
-void drawGround(){
-
-  fill(WHITE);
-  stroke(WHITE);
-  line(0, GROUND_Y, width, GROUND_Y);
 }
 
 // A method to get delta time

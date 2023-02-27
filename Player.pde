@@ -9,6 +9,11 @@ class Player extends AABBActor implements Attacking {
     this
       .addComponent(movement)
       .addComponent(collision);
+      
+    xMinVelocity = 150;
+    xMaxVelocity = 500;
+    
+    movement.setVisibility(true);
     
     this.x = x;
     this.y = y;
