@@ -16,8 +16,8 @@ class Movement extends Component {
 
     // Player xVel is slowed to zero linearly based off how close timer is to zero
     if (!isMoving) {
-      stopDelay.update();
-      parent.velocity.x = lerp( parent.velocity.x, 0,  1 - stopDelay.timeLeft / stopDelay.duration );
+      //stopDelay.update();
+      //parent.velocity.x = lerp( parent.velocity.x, 0,  1 - stopDelay.timeLeft / stopDelay.duration );
       return;
     }
     

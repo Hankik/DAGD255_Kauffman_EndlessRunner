@@ -5,12 +5,16 @@
  DAGD 255
  
  */
+ 
+// import libraries
+import java.util.Map;
+import java.io.FileReader;  
 
 //
 // declare global fields
 //
 
-final int LEVEL_AMOUNT = 1;               // LEVELS
+final int LEVEL_AMOUNT = 3;               // LEVELS
 int currentLevel = 0;
 Level[] levels = new Level[LEVEL_AMOUNT];
 
@@ -56,7 +60,7 @@ void setup() {
 
 void draw() {
   calcDeltaTime();
-  background(BLACK);
+  background(WHITE);
 
  
   if (!isPaused) {
@@ -68,6 +72,9 @@ void draw() {
 
 void keyPressed() {
   Keyboard.handleKeyDown(keyCode);
+  if  (!isPaused) {
+    levels[currentLevel].keyPressed();
+  }
 }
 
 void keyReleased() {
@@ -94,4 +101,8 @@ void calcDeltaTime() {
   float currTime = millis();
   dt = (currTime - prevTime) / 1000;
   prevTime = currTime;
+}
+
+float clamp(float val, float min, float max) {
+    return Math.max(min, Math.min(max, val));
 }

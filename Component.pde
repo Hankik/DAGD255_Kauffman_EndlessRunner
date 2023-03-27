@@ -2,7 +2,7 @@ abstract class Component {
 
   // fields
   String name = "";
-  ArrayList<Component> components;
+  ArrayList<Component> components = new ArrayList();
   AABBActor parent;
   float x, y;
   boolean isVisible = false;

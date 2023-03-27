@@ -11,7 +11,7 @@ public class AABBActor {
   boolean canSeeHitbox = true;
 
   // Component fields
-  ArrayList<Component> components = new ArrayList();
+  HashMap<String, Component> components = new HashMap();
 
   // Gravity fields
   float gravityScale = 1;
@@ -99,7 +99,8 @@ public class AABBActor {
     float pushLeft = edgeR - other.edgeL;
 
     if (pushUp <= pushLeft) setBottomEdge(other.edgeT);
-    else setRightEdge(other.edgeL);
+    else {
+    }//setRightEdge(other.edgeL);
   }
   public void setBottomEdge(float Y) {
     y = Y - halfH;
@@ -177,7 +178,7 @@ public class AABBActor {
     else xHitMaxSpeed = false;
     if ( velocity.y > yMaxVelocity || velocity.y < -yMaxVelocity ) yHitMaxSpeed = true;
     else yHitMaxSpeed = false;
-    
+
     velocity.x = max(xMinVelocity, velocity.x);
     velocity.y = max(yMinVelocity, velocity.y);
 
@@ -189,17 +190,17 @@ public class AABBActor {
   // Component methods
   //
   void updateComponents() {
-    for (Component c : components) c.update();
+    for (Map.Entry<String, Component> entry : components.entrySet()) entry.getValue().update();
   }
 
   void drawComponents() {
-    for (Component c : components) c.draw();
+    for (Map.Entry<String, Component> entry : components.entrySet()) entry.getValue().draw();
   }
 
   // A method to add components to actor
   AABBActor addComponent(Component c) {
 
-    components.add(c);
+    components.put(name, c);
 
     return this; // Actor return type allows for chaining addComponent() calls
   }
@@ -207,13 +208,26 @@ public class AABBActor {
   // If using this method, always check for possibility of NULL
   Component getComponent(String name) {
 
-    for (Component c : components) {
-
-      if (c.name == name) return c;
-    }
+    if (components.containsKey(name)) return components.get(name);
 
     println(this.name + " could not find component '" + name + "'.");
     return null;
+  }
+
+  float distanceFrom(AABBActor other) {
+
+    return dist(other.x, other.y, x, y);
+  }
+
+  float distanceFrom(Component other) {
+    try {
+
+      return dist(other.x, other.y, x, y);
+    }
+    catch(Exception e) {
+      println("No position found in '" + other.name + "' component.");
+      return -1;
+    }
   }
 }
 
@@ -221,10 +235,21 @@ class ActorFactory {
 
   // fields
   ArrayList<AABBActor> list = new ArrayList();
+  int npcAmount = 0;
 
   void update() {
 
-    for (AABBActor a : list) a.update();
+    for (int i = list.size() - 1; i >= 0; i--) { // loop backwards through all actors
+
+      AABBActor a = list.get(i); // access actor at index i
+
+      if (a.isDead) { // if dead, remove and dont update
+        list.remove(i);
+        continue;
+      }
+
+      a.update();
+    }
   }
 
   void draw() {
@@ -245,6 +270,13 @@ class ActorFactory {
       Platform p = new Platform(x, y, w, h);
       list.add(p);
       return p;
+    }
+    if (name.equalsIgnoreCase("NPC")) {
+      npcAmount++;
+      // naming convention matters here. each npc and its script need to be named the same
+      NPC n = new NPC(x, y, w, h, "npc" + npcAmount + ".txt");
+      list.add(n);
+      return n;
     }
 
     return null;
