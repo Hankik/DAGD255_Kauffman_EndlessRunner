@@ -200,7 +200,7 @@ public class AABBActor {
   // A method to add components to actor
   AABBActor addComponent(Component c) {
 
-    components.put(name, c);
+    components.put(c.name, c);
 
     return this; // Actor return type allows for chaining addComponent() calls
   }

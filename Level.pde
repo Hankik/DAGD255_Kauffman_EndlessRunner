@@ -20,6 +20,7 @@ class Level {
     case 0:
 
       player = (Player) actors.createActor("player", width*.5, height*.5, 40, 80);
+      // ...........................{something, something, something}
       boolean[] playerProgression = {false, false, false};
       player.progression.setupProgression(playerProgression);
       
@@ -101,9 +102,7 @@ class Level {
     else camera.resume();
     
   }
-
-
-
+  
   void drawGround() {
 
     stroke(RED);
